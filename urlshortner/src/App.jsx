@@ -1,35 +1,45 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from "react";
+import "./App.css";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [url, setUrl] = useState("");
+  const [shortenUrl, setShortenUrl] = useState("");
+
+  async function handleClick() {
+    await fetch("http://localhost:3000/shorten", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        url: url,
+      }),
+    })
+      .then((data) => data.json())
+      .then((res) => {
+        setShortenUrl(res.url);
+      })
+      .catch((err) => {
+        window.alert("Error creating short url");
+      });
+  }
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div>
+      <h1>URL Shortner</h1>
+      <div className="input-div">
+        <div>Enter a long URL:</div>
+        <input value={url} onChange={(e) => setUrl(e.target.value)} type="text" />
+        <button onClick={() => handleClick()}>Shorten URL</button>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+      <br />
+      {shortenUrl && (
+        <div>
+          Short url is <a href={shortenUrl}>{shortenUrl}</a>
+        </div>
+      )}
+    </div>
+  );
 }
 
-export default App
+export default App;
