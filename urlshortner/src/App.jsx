@@ -6,7 +6,7 @@ function App() {
   const [shortenUrl, setShortenUrl] = useState("");
 
   async function handleClick() {
-    await fetch("http://localhost:3000/shorten", {
+    await fetch("https://urlshortnerserver-fnto.onrender.com/shorten", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
